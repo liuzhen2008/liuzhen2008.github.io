@@ -10,13 +10,14 @@ To develop:
 
 ```bash
 $ npm run dev```
-
+```
 To build for production:
 
 ```bash
 $ npm run build
-```
 
+index.html and related resources will appear in ./dist
+```
 
 ---
 
