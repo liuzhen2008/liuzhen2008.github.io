@@ -1,5 +1,5 @@
 let pagesize = 500;
-let url = "http://34.230.8.151:8080/api.binance.com/api/v1/aggTrades?";
+let url = "http://34.230.8.151/binance-api/api/v1/aggTrades?";
 
 function getFlow(store, coin, basecoin, startTime, cb) {
   if (!coin || !basecoin || !startTime) {

@@ -48,7 +48,6 @@
     },
     methods: {
       calculate () {
-        let self = this;
         this.calculating = true;
         tradeList.getFlow(this.$store, this.coin, this.basecoin, this.startTime);
       }
