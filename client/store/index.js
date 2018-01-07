@@ -15,7 +15,7 @@ const mutations = {
     state.count--
   },
   addFlowResult (state, result) {
-    state.flowResults.unshift(result);
+    state.flowResults.push(result);
   },
   clearFlowResults (state) {
     state.flowResults = [];
