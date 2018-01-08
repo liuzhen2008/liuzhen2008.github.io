@@ -19,8 +19,14 @@ function fetchBinanceData(store, orderId, startTime, endDate, symbol, oldFlowVal
     return result.json();
   })
   .then(function(data) {
-    if (data.length === 0 || data[data.length - 1].T >= endDate) {
-      return calculateFlowValue(store, data, oldFlowValue);
+    if (data.length < pagesize || data.length === 0 || data[data.length - 1].T > endDate) {
+      let i;
+      for (i = 0; i < data.length; i ++) {
+        if (data[i] && data[i].T > endDate) {
+          break;
+        }
+      }
+      return calculateFlowValue(store, data.splice(0, i), oldFlowValue);
     } else {
       return fetchBinanceData(store, orderId + 500, startTime, endDate, symbol, calculateFlowValue(store, data, oldFlowValue));
     }
@@ -42,7 +48,7 @@ function calculateFlowValue(store, data, oldFlowValue) {
 
 
 function getFirstOrderId(symbol, startTime, endTime) {
-  return fetch(url + "symbol=" + symbol + "&limit=1&startTime=" + startTime.getTime() + "&endTime=" + (startTime.getTime() + 1000 * 3600))
+  return fetch(url + "symbol=" + symbol + "&startTime=" + startTime.getTime() + "&endTime=" + (startTime.getTime() + 1000 * 60))
   .then(function(result) {
     return result.json();
   })
