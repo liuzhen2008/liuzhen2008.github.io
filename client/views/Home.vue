@@ -6,7 +6,7 @@
     <input v-model="basecoin"/>
     <p>Specify your start date. This is default to 24 hrs ago.</p>
     <date-picker v-model="startTime" type="datetime" format="yyyy-MM-dd hh:mm:ss a" :not-after="today" lang="en"></date-picker>
-    <p>Specify your end date. This is default to current time.</p>
+    <p>Specify your end date. <button v-on:click="setDefaultEndTime">Use current time</button></p>
     <date-picker v-model="endTime" type="datetime" format="yyyy-MM-dd hh:mm:ss a" :not-before="startTime" lang="en"></date-picker>
     <br/>
     <button v-on:click="calculate">Lets calculate this flow thing</button>
@@ -50,7 +50,14 @@
       }
     },
     methods: {
+      setDefaultEndTime () {
+        this.endTime = new Date();
+      },
       calculate () {
+        if (!this.coin || !this.basecoin || !this.startTime || !this.endTime) {
+          alert("Please fill out everything first");
+          return;
+        }
         this.calculating = true;
         tradeList.getFlow(this.$store, this.coin, this.basecoin, this.startTime, this.endTime);
       }
