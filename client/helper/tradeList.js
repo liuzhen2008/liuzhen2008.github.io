@@ -35,6 +35,7 @@ function fetchBinanceData(store, orderId, startTime, endDate, symbol, oldFlowVal
 
 function calculateFlowValue(store, data, oldFlowValue) {
   let i;
+  if (!data.length) return oldFlowValue;
   for (i = 0; i < data.length; i ++) {
     if (data[i].m) {
       oldFlowValue -= data[i].p * data[i].q;
