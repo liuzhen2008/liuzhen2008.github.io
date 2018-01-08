@@ -9,13 +9,13 @@
     <br/>
     <button v-on:click="calculate">Lets calculate this flow thing</button>
     <div v-if="(calculating && !error)">
-      <h2>Calculating order flow form the last {{ Math.round((Date.now() - startTime.getTime()) / 1000 / 3600) }} hours or last {{ Math.round((Date.now() - startTime.getTime()) / 1000 / 60) }} minutes</h2>
+      <h2>Calculating order flow for the last {{ Math.round((Date.now() - startTime.getTime()) / 1000 / 3600) }} hours or last {{ Math.round((Date.now() - startTime.getTime()) / 1000 / 60) }} minutes</h2>
     </div>
     <div v-if="error">{{ error.message }}</div>
     <div v-if="(flowResults.length !== 0)">
       <ul>
         <li v-for="flowResult in flowResults">
-          Flow value for {{ coin }}/{{ basecoin }} from {{ (new Date(flowResult.date)).toLocaleString() }} to now is {{ flowResult.value }}
+          Flow value for {{ coin }}/{{ basecoin }} from {{ (new Date(startTime)).toLocaleString() }} to {{ (new Date(flowResult.date)).toLocaleString() }} is {{ flowResult.value }}
         </li>
       </ul>
     </div>
@@ -60,5 +60,8 @@
   h1, h2 {
     font-weight: normal;
     margin: 0;
+  }
+  .hello {
+    padding-left: 50px;
   }
 </style>

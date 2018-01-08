@@ -12,48 +12,42 @@ function getFlow(store, coin, basecoin, startTime, cb) {
   basecoin = basecoin.toUpperCase();
 
   let symbol = coin + basecoin;
-  getLastOrderId(symbol)
-  .then(function(lastOrderId) {
-    fetchBinanceData(store, lastOrderId, startTime, symbol, 0);
+  getFirstOrderId(symbol, startTime)
+  .then(function(firstOrderId) {
+    fetchBinanceData(store, firstOrderId, startTime, new Date(), symbol, 0);
   });
 }
 
-function fetchBinanceData(store, orderId, startTime, symbol, oldFlowValue) {
-  orderId = orderId - pagesize;
+function fetchBinanceData(store, orderId, startTime, endDate, symbol, oldFlowValue) {
   return fetch(url + "symbol=" + symbol + "&fromId=" + orderId)
   .then(function(result) {
     return result.json();
   })
   .then(function(data) {
-    let i = 0;
-    if (data[0].T < startTime) {
-      for ( i = 0; i < data.length; i++) {
-        if (data[i].T > startTime) {
-          break;
-        }
-      }
-      return calculateFlowValue(store, data.slice(i), oldFlowValue);
+    if (data.length === 0 || data[data.length - 1].T >= endDate) {
+      return calculateFlowValue(store, data, oldFlowValue);
     } else {
-      return fetchBinanceData(store, orderId, startTime, symbol, calculateFlowValue(store, data, oldFlowValue));
+      return fetchBinanceData(store, orderId + 500, startTime, endDate, symbol, calculateFlowValue(store, data, oldFlowValue));
     }
   });
 }
 
 function calculateFlowValue(store, data, oldFlowValue) {
-  for (let i = 0; i < data.length; i ++) {
+  let i;
+  for (i = 0; i < data.length; i ++) {
     if (data[i].m) {
       oldFlowValue += data[i].p * data[i].q;
     } else {
       oldFlowValue -= data[i].p * data[i].q;
     }
   }
-  store.dispatch('addFlowResult', {value: oldFlowValue, date: new Date(data[0].T)});
+  store.dispatch('addFlowResult', {value: oldFlowValue, date: new Date(data[data.length - 1].T)});
   return oldFlowValue;
 }
 
 
-function getLastOrderId(symbol) {
-  return fetch(url + "symbol=" + symbol + "&limit=1")
+function getFirstOrderId(symbol, startTime, endTime) {
+  return fetch(url + "symbol=" + symbol + "&limit=1&startTime=" + startTime.getTime() + "&endTime=" + (startTime.getTime() + 1000 * 3600))
   .then(function(result) {
     return result.json();
   })
