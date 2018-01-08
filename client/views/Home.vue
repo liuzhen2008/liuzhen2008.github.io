@@ -4,12 +4,14 @@
     <input v-model="coin"/>
     <p>what base coin(BTC/ETH/USDT/BNB)</p>
     <input v-model="basecoin"/>
-    <p>Specify your start date.</p>
+    <p>Specify your start date. This is default to 24 hrs ago.</p>
     <date-picker v-model="startTime" type="datetime" format="yyyy-MM-dd hh:mm:ss a" :not-after="today" lang="en"></date-picker>
+    <p>Specify your end date. This is default to current time.</p>
+    <date-picker v-model="endTime" type="datetime" format="yyyy-MM-dd hh:mm:ss a" :not-before="startTime" lang="en"></date-picker>
     <br/>
     <button v-on:click="calculate">Lets calculate this flow thing</button>
     <div v-if="(calculating && !error)">
-      <h2>Calculating order flow for the last {{ Math.round((Date.now() - startTime.getTime()) / 1000 / 3600) }} hours or last {{ Math.round((Date.now() - startTime.getTime()) / 1000 / 60) }} minutes</h2>
+      <h2>Calculating order flow from {{ (new Date(startTime)).toLocaleString() }} to {{ (new Date(endTime)).toLocaleString() }}</h2>
     </div>
     <div v-if="error">{{ error.message }}</div>
     <div v-if="(flowResults.length !== 0)">
@@ -38,6 +40,7 @@
         coin: "",
         basecoin: "btc",
         startTime: new Date(Date.now() - 1000 * 3600 * 24),
+        endTime: new Date(),
         today: new Date(),
         shortcuts: [
           {
@@ -49,7 +52,7 @@
     methods: {
       calculate () {
         this.calculating = true;
-        tradeList.getFlow(this.$store, this.coin, this.basecoin, this.startTime);
+        tradeList.getFlow(this.$store, this.coin, this.basecoin, this.startTime, this.endTime);
       }
     }
   }

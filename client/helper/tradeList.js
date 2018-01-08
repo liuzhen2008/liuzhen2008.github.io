@@ -1,12 +1,7 @@
 let pagesize = 500;
 let url = "http://34.230.8.151/binance-api/api/v1/aggTrades?";
 
-function getFlow(store, coin, basecoin, startTime, cb) {
-  if (!coin || !basecoin || !startTime) {
-    cb(new Error("please fill out everything first"));
-    return;
-  }
-
+function getFlow(store, coin, basecoin, startTime, endTime) {
   store.dispatch('clearFlowResults');
   coin = coin.toUpperCase();
   basecoin = basecoin.toUpperCase();
@@ -14,7 +9,7 @@ function getFlow(store, coin, basecoin, startTime, cb) {
   let symbol = coin + basecoin;
   getFirstOrderId(symbol, startTime)
   .then(function(firstOrderId) {
-    fetchBinanceData(store, firstOrderId, startTime, new Date(), symbol, 0);
+    fetchBinanceData(store, firstOrderId, startTime, endTime, symbol, 0);
   });
 }
 
