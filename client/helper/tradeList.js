@@ -31,9 +31,9 @@ function calculateFlowValue(store, data, oldFlowValue) {
   let i;
   for (i = 0; i < data.length; i ++) {
     if (data[i].m) {
-      oldFlowValue += data[i].p * data[i].q;
-    } else {
       oldFlowValue -= data[i].p * data[i].q;
+    } else {
+      oldFlowValue += data[i].p * data[i].q;
     }
   }
   store.dispatch('addFlowResult', {value: oldFlowValue, date: new Date(data[data.length - 1].T)});
