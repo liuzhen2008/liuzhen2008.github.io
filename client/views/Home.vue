@@ -1,10 +1,10 @@
 <template>
   <div class="hello">
-    <p>what coin(waves/dgb/shitcoin)</p>
+    <p>Enter a coin ticker that is being bought (waves/mtl/nav/eth)</p>
     <input v-model="coin"/>
-    <p>what base coin(BTC/ETH/USDT/BNB)</p>
+    <p>Enter a base coin ticker (BTC/ETH/USDT/BNB)</p>
     <input v-model="basecoin"/>
-    <p>Specify your start date. This is default to 24 hrs ago.</p>
+    <p>Specify your start date. This is default to 24 hrs ago. </p>
     <date-picker v-model="startTime" type="datetime" format="yyyy-MM-dd hh:mm:ss a" :not-after="today" lang="en"></date-picker>
     <p>Specify your end date. <button v-on:click="setDefaultEndTime">Use current time</button></p>
     <date-picker v-model="endTime" type="datetime" format="yyyy-MM-dd hh:mm:ss a" :not-before="startTime" lang="en"></date-picker>
@@ -41,7 +41,7 @@
         basecoin: "btc",
         startTime: new Date(Date.now() - 1000 * 3600 * 24),
         endTime: new Date(),
-        today: new Date(),
+        today: new Date(Date.now() + 1000 * 3600),
         shortcuts: [
           {
             end: new Date()
@@ -59,7 +59,7 @@
           return;
         }
         this.calculating = true;
-        tradeList.getFlow(this.$store, this.coin, this.basecoin, this.startTime, this.endTime);
+        tradeList.Flow(this.$store, this.coin, this.basecoin, this.startTime, this.endTime);
       }
     }
   }
